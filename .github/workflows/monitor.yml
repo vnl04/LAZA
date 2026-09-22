@@ -1,0 +1,34 @@
+name: Giám sát giá Hi75C
+
+on:
+  schedule:
+    # Chạy mỗi 15 phút (giờ UTC). GitHub Actions không đảm bảo chạy đúng giây,
+    # có thể lệch vài phút, nhưng đủ dùng cho việc canh giá.
+    - cron: "*/15 * * * *"
+  workflow_dispatch: {}   # Cho phép bấm nút "Run workflow" để chạy thử thủ công
+
+jobs:
+  check-price:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cài Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cài thư viện
+        run: pip install selenium requests webdriver-manager
+
+      - name: Cài Google Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Chạy script kiểm tra giá
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python monitor_hi75c.py
