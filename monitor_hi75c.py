@@ -70,10 +70,19 @@ def get_current_price():
     try:
         driver.get(PRODUCT_URL)
         time.sleep(PAGE_LOAD_WAIT_SECONDS)
+        log(f"URL sau khi tải xong (đã redirect nếu có): {driver.current_url}")
 
         page_text = driver.find_element("tag name", "body").text
         matches = re.findall(r"([\d]{1,3}(?:\.\d{3})+)\s*đ", page_text)
         if not matches:
+            # Lưu ảnh chụp màn hình + HTML để debug xem trang thực sự đang hiện gì
+            try:
+                driver.save_screenshot("debug_screenshot.png")
+                with open("debug_page.html", "w", encoding="utf-8") as f:
+                    f.write(driver.page_source)
+                log("📸 Đã lưu debug_screenshot.png và debug_page.html để kiểm tra.")
+            except Exception as e:
+                log(f"⚠️ Không lưu được ảnh debug: {e}")
             return None
 
         prices = [int(m.replace(".", "")) for m in matches]
