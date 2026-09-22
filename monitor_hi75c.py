@@ -31,7 +31,7 @@ TARGET_PRICE = 800_000                             # Mức giá muốn được 
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
 
-PAGE_LOAD_WAIT_SECONDS = 6
+PAGE_LOAD_WAIT_SECONDS = 15
 # ============================================================
 
 
